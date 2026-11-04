@@ -14,7 +14,7 @@ df = df[df["overview"].fillna("").str.split().str.len() >= 15] # split the strin
 print("overview >= 15 words:", len(df))
 
 df = df[df["vote_count"] >= 5]
-print("after number of votes in IMDB >= 5: (people know this movie)", len(df))
+print("after number of votes in TMDB >= 5: (people know this movie)", len(df))
 
 df = df.reset_index(drop=True)
 df.to_csv("data/clean_movies.csv", index=False)
