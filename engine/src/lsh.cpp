@@ -4,7 +4,7 @@
 
 
 LSH::LSH(int bits, int tables, unsigned int seed)
-    : bits_(bits), tables_(tables), seed_(seed) {}
+    : bits_(bits), num_tables_(tables), seed_(seed) {}
 
 
 // helper functions
@@ -25,7 +25,7 @@ void LSH::make_random_arrows() {
     std::mt19937 rng(seed_);
     std::normal_distribution<float> bell(0.0f, 1.0f); // bell curve distribution
 
-    arrows_.resize(tables_ * bits_ * dim_);
+    arrows_.resize((size_t)num_tables_ * bits_ * dim_);
     for (float& arrow : arrows_) {
         arrow = bell(rng);
     }
@@ -33,22 +33,23 @@ void LSH::make_random_arrows() {
 
 // get the pointer to the arrow for a specific table and bit
 const float* LSH::get_arrow(int table, int bit) const {
-    return &arrows_[(table * bits_ + bit) * dim_];
+    return &arrows_[((size_t)table * bits_ + bit) * dim_];
 }
 
 
 // hash a vector into a 32-bit integer code for a specific table
 // each arrow contributes one bit, 1 for same direction, 0 for opposite
-uint32_t LSH::hash(const float* vector, int table) const {
+uint32_t LSH::hash(const float* vec, int table) const {
     uint32_t code = 0;
     for (int bit = 0; bit < bits_; bit++) {
-        bool same_direction = dot(vector, get_arrow(table, bit)) >= 0; // 1/0 for each arrow based on dot product
+        bool same_direction = dot(vec, get_arrow(table, bit)) >= 0; // 1/0 for each arrow based on dot product
         code = (code << 1) | (same_direction ? 1 : 0); // add bit onto the code, shifting left
     }
     return code;
 }
 
 
+// build function: takes in n vectors of dimension dim and stores them in the LSH structure
 
 void LSH::build(const float* data, int n, int dim) {
     data_ = data;
@@ -59,9 +60,9 @@ void LSH::build(const float* data, int n, int dim) {
 
     // put every movie into a bucket in every table
 
-    tables_.assign(tables_, Table()); // initialize hash tables
+    tables_.assign(num_tables_, Table()); // initialize hash tables
     for (int row = 0; row < n_; ++row) {
-        for (int table = 0; table < tables_; table++) {
+        for (int table = 0; table < num_tables_; table++) {
             uint32_t code = hash(&data_[row * dim_], table); // hash each vector
             tables_[table][code].push_back(row); // store the index in the corresponding bucket
         }
@@ -70,12 +71,16 @@ void LSH::build(const float* data, int n, int dim) {
 
 
 
+// query function: takes in a query vector and returns the k nearest neighbors based on cosine similarity
+
 std::vector<std::pair<int, float>> LSH::query(const float* q, int k) const {
     std::vector<int> candidates;
 
-    for (int table = 0; table < tables_; table++) {
+    for (int table = 0; table < num_tables_; table++) {
         uint32_t code = hash(q, table); // hash the query vector
+        
         auto bucket = tables_[table].find(code); // find the bucket for this hash code
+        
         if (bucket != tables_[table].end()) {
             candidates.insert(candidates.end(), bucket->second.begin(), bucket->second.end()); // add all candidates from this bucket
         }
@@ -94,3 +99,5 @@ std::vector<std::pair<int, float>> LSH::query(const float* q, int k) const {
     scores.resize(keep);
     return scores;
 }
+
+

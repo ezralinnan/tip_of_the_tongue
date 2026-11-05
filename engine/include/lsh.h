@@ -28,7 +28,7 @@ public:
 
     // query the LSH for the k nearest neighbors of the query vector
     // returns a list of k best vectors, with (row number, score) as a pair
-    std::vector<std::pair<int, float>> query(const float* query, int k) const;
+    std::vector<std::pair<int, float>> query(const float* q, int k) const;
 
 private:
     // settings and seed
@@ -46,7 +46,7 @@ private:
 
     // hash tables for LSH
     using Table = std::unordered_map<uint32_t, std::vector<int>>;
-    std::vector<Table> num_tables_;
+    std::vector<Table> tables_;
 
     // helper functions inside LSH class
     float dot(const float* a, const float* b) const;
@@ -55,5 +55,5 @@ private:
     const float* get_arrow(int table, int bit) const;
 
 
-    uint32_t hash(const float* vector, int table) const;
+    uint32_t hash(const float* vec, int table) const;
 };
