@@ -21,6 +21,8 @@ class LSH {
 public:
     LSH(int bits = 16, int tables = 10, unsigned int seed = 21);
 
+    //note: bits can't go above 32, because we are using a 32-bit integer to store the hash code for speed
+
     // n vectors of dimension dim -> data
     void build(const float* data, int n, int dim);
 
@@ -53,5 +55,5 @@ private:
     const float* get_arrow(int table, int bit) const;
 
 
-    int32_t hash(const float* vector, int table) const;
+    uint32_t hash(const float* vector, int table) const;
 };
