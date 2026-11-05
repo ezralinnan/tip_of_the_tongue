@@ -59,9 +59,11 @@ int main() {
     tree.build(data.data(), n, dim);      // pointer strategy from earlier
 
     int matches = 0;
+    long long totalChecked = 0; // big number and whatnot, it is a big project
     for (int i = 0; i < numQueries; i++) {
         const float* q = &queries[i * dim];                  // query i starts here
         auto kd = tree.query(q, k);
+        totalChecked += tree.lastChecked();  // need to know for comparisons v brute force
         auto bf = bruteForce(data.data(), n, dim, q, k);
 
         bool same = (kd.size() == bf.size());
@@ -72,4 +74,26 @@ int main() {
         else std::cout << "not the same on query number" << i << "\n";
     }
     std::cout << matches << " out of " << numQueries << " match\n";
+    std::cout << "average checked: " << totalChecked / numQueries << " of " << n << "\n";
+
+    std::cout << "Leaves in tree: " << tree.leafCount() << "\n";
+
+    int caps[] = {1, 8, 32, 128, 512, tree.leafCount()}; // trying caps out for leaves
+    for (int m : caps) {
+        tree.setMaxLeaves(m);
+        long long found = 0, checkedSum = 0;
+        for (int i = 0; i < numQueries; i++) {
+            const float* q = &queries[i * dim];
+            auto kd = tree.query(q, k); // use my kd tree
+            checkedSum += tree.lastChecked(); // increase the checked counter
+            auto bf = bruteForce(data.data(), n, dim, q, k);
+            for (auto& tru : bf)                       // each true answer
+                for (auto& guess : kd)                   // did the KD-tree guess find it?
+                    if (guess.first == tru.first) { found++; break; }
+        }
+        std::cout << "m=" << m
+                  << "  recall@5=" << (double)found / (k * numQueries)
+                  << "  avg checked=" << checkedSum / numQueries << "\n";
+    }
+    tree.setMaxLeaves(-1);                           // back to exact
 }

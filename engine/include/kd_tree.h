@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <queue>
+#include <functional> 
 
 struct Node {
     // internal nodes use these
@@ -30,7 +31,11 @@ class KDTree{
         void destroy(Node* node);
         float distSq(const float* q, int row) const;
         using Heap = std::priority_queue<std::pair<float, int>>; // spares me the headache of the massive signature
-        void searchRec(const Node* node, const float* q, int k, Heap& heap) const;
+        int lastCheckedCount = 0;
+        void searchRec(const Node* node, const float* q, int k, Heap& heap, int& checked) const;
+        int maxLeaves = -1;   // start at a default of -1 for NOT CAPPED MODE, recursive (exact) search
+        int numLeaves = 0;     
+        void searchCapped(const float* q, int k, Heap& heap, int& checked) const; // new function signature, not recursive this time. CAPPED
 
     public:
         void print() const;
@@ -42,4 +47,7 @@ class KDTree{
 
         void build(const float* data, int n, int dim);
         std::vector<std::pair<int, float>> query(const float* q, int k); // int k is how many results to return, useful for top 5
+        int lastChecked() const { return lastCheckedCount; }
+        void setMaxLeaves(int m) { maxLeaves = m; }
+        int leafCount() const { return numLeaves; }
 };
