@@ -14,8 +14,8 @@ void KDTree::build(const float* data, int n, int dim){
         idx[i] = i;
     }
 
+    numLeaves = 0;
     root = buildRec(0, n, 0);
-
     return;
 }
 
@@ -27,7 +27,8 @@ Node* KDTree::buildRec(int lo, int hi, int depth){
             for (int i = lo; i < hi; i++) {
         node->rows.push_back(idx[i]);    // copy the spot i into the leaf, vector so push_back
         }
-    return node;
+        numLeaves++;
+        return node;
     }
 
     int d = depth % dim;
@@ -124,7 +125,10 @@ std::vector<std::pair<int, float>> KDTree::query(const float* q, int k) { // ret
     Heap heap;
 
     int checked = 0;
-    if (root != nullptr) searchRec(root, q, k, heap, checked); // i mean it cant be empty right, all trees do this
+    if (root != nullptr) { // i mean it cant be empty right, all trees do this, but still have a checker
+        if (maxLeaves < 0) searchRec(root, q, k, heap, checked);   // exact mode
+        else               searchCapped(q, k, heap, checked);      // capped mode
+    } 
     lastCheckedCount = checked;
 
     std::vector<std::pair<int, float>> result; // prepare
@@ -137,4 +141,50 @@ std::vector<std::pair<int, float>> KDTree::query(const float* q, int k) { // ret
     std::reverse(result.begin(), result.end());        // heap gave worst flip to best first, another std library algorithm
     // not essential to functioning of the KD Tree
     return result;
+}
+
+void KDTree::searchCapped(const float* q, int k, Heap& heap, int& checked) const {
+    using Branch = std::pair<float, const Node*>;    // doing this just saves me the annoyment 
+    std::priority_queue<Branch, std::vector<Branch>, std::greater<Branch>> toVisit;   // we need a min heap of branches, signature seen in lectures
+
+    toVisit.push({0.0f, root});
+    int leavesVisited = 0;
+
+    while (!toVisit.empty() && leavesVisited < maxLeaves) {
+       float bound = toVisit.top().first; // the current top bound in the minHeap
+       const Node* node = toVisit.top().second;
+       toVisit.pop();
+
+        if ((int)heap.size() == k && bound >= heap.top().first) { // == because function handles no bigger than k
+            continue; // check against the heap of results, if it cannot improve it, do not bother
+        }
+
+        while (!node->isLeaf()) {
+            float gap = q[node->splitDim] - node->splitVal; // the query array at the specific dimension - the splitting value of the node
+            const Node* near;
+            const Node* far;
+            if (gap <= 0){
+                near = node->left; // simple logic to see which side is the nearest 
+                far = node->right;
+            } else {
+                near = node->right;
+                far = node->left;
+            }
+
+            toVisit.push({gap * gap, far}); // push the farther one
+            node = near; // this helps me traverse to an actual leaf
+        }
+
+        for (int row: node->rows){
+            float dist = distSq(q, row);
+            checked++;
+            if ((int)heap.size() < k){
+                heap.push({dist, row});
+            } else if (dist < heap.top().first){
+                heap.pop();
+                heap.push({dist, row});
+            }
+        }
+        leavesVisited++;
+    }
 }
