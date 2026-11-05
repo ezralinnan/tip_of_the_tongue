@@ -2,6 +2,8 @@
 
 #include <vector>
 #include <unordered_map>
+#include <utility>
+#include <cstdint>
 
 
 
@@ -39,4 +41,17 @@ private:
     const float* data_ = nullptr;
     int n_ = 0;
     int dim_ = 0;
+
+    // hash tables for LSH
+    using Table = std::unordered_map<uint32_t, std::vector<int>>;
+    std::vector<Table> tables_;
+
+    // helper functions inside LSH class
+    float dot(const float* a, const float* b) const;
+
+    void make_random_arrows();
+    const float* get_arrow(int table, int bit) const;
+
+
+    int32_t hash(const float* vector, int table) const;
 };
