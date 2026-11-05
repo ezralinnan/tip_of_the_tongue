@@ -5,3 +5,13 @@ build/
 .DS_Store
 .vscode/
 test_kd
+.venv/
+venv/
+__pycache__/
+.ipynb_checkpoints/
+.idea/
+.vs/
+build/
+out/
+*.exe
+test_scale
