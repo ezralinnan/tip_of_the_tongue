@@ -96,6 +96,9 @@ std::vector<std::pair<int, float>> LSH::query(const float* q, int k) const {
     }
 
     int keep = std::min<int>(k, (int)scores.size());
+    std::partial_sort(scores.begin(), scores.begin() + keep, scores.end(),
+                      [](const auto& a, const auto& b) { return a.second > b.second; }); // keep k best matches and sort by score 
+
     scores.resize(keep);
     return scores;
 }
