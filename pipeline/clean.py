@@ -16,5 +16,8 @@ print("overview >= 15 words:", len(df))
 df = df[df["vote_count"] >= 5]
 print("after number of votes in TMDB >= 5: (people know this movie)", len(df))
 
+# convert release_date to year, and fill NaN with 0 (unknown)
+df["year"] = pd.to_datetime(df["release_date"], errors="coerce").dt.year.fillna(0).astype(int)
+
 df = df.reset_index(drop=True)
 df.to_csv("data/clean_movies.csv", index=False)
