@@ -24,9 +24,11 @@ What are we measuring: accuracy compared to algorithm speed
 
 ## Data
 
-Training dataset from Kaggle, nearly 1,000,000 movie records along with keywords, genres, summaries, and other movie information
+Training dataset from Kaggle, nearly 1,000,000 movie records along with keywords, genres, summaries, and other movie information.
 
-Link:
+Download link for movies.csv and vectors.bin: https://drive.google.com/drive/folders/1ILDijFZaFGOCPk6gXT3ipaW0L-DQNeuz?usp=sharing
+
+Both files should be placed into a folder named 'data/' from the project root.
 
 
 ## Results
