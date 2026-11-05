@@ -33,7 +33,7 @@ public:
 private:
     // settings and seed
     int bits_;
-    int tables_;
+    int num_tables_;
     unsigned int seed_;
 
     // random arrows for hashing
@@ -46,7 +46,7 @@ private:
 
     // hash tables for LSH
     using Table = std::unordered_map<uint32_t, std::vector<int>>;
-    std::vector<Table> tables_;
+    std::vector<Table> num_tables_;
 
     // helper functions inside LSH class
     float dot(const float* a, const float* b) const;

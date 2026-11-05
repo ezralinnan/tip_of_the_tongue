@@ -47,3 +47,50 @@ uint32_t LSH::hash(const float* vector, int table) const {
     }
     return code;
 }
+
+
+
+void LSH::build(const float* data, int n, int dim) {
+    data_ = data;
+    n_ = n;
+    dim_ = dim;
+
+    make_random_arrows(); // generate random hyperplanes
+
+    // put every movie into a bucket in every table
+
+    tables_.assign(tables_, Table()); // initialize hash tables
+    for (int row = 0; row < n_; ++row) {
+        for (int table = 0; table < tables_; table++) {
+            uint32_t code = hash(&data_[row * dim_], table); // hash each vector
+            tables_[table][code].push_back(row); // store the index in the corresponding bucket
+        }
+    }
+} // runs once and then querying is fast
+
+
+
+std::vector<std::pair<int, float>> LSH::query(const float* q, int k) const {
+    std::vector<int> candidates;
+
+    for (int table = 0; table < tables_; table++) {
+        uint32_t code = hash(q, table); // hash the query vector
+        auto bucket = tables_[table].find(code); // find the bucket for this hash code
+        if (bucket != tables_[table].end()) {
+            candidates.insert(candidates.end(), bucket->second.begin(), bucket->second.end()); // add all candidates from this bucket
+        }
+    }
+
+    std::sort(candidates.begin(), candidates.end());
+    candidates.erase(std::unique(candidates.begin(), candidates.end()), candidates.end());
+
+    std::vector<std::pair<int, float>> scores;
+    for (int idx : candidates) {
+        float score = dot(q, &data_[idx * dim_]); // compute cosine similarity
+        scores.emplace_back(idx, score);
+    }
+
+    int keep = std::min<int>(k, (int)scores.size());
+    scores.resize(keep);
+    return scores;
+}
