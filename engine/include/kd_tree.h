@@ -29,7 +29,7 @@ class KDTree{
         Node* buildRec(int lo, int hi, int depth);   // the recursive build
         void destroy(Node* node);
         float distSq(const float* q, int row) const;
-        using Heap = std::priority_queue<std::pair<float, int>>;
+        using Heap = std::priority_queue<std::pair<float, int>>; // spares me the headache of the massive signature
         void searchRec(const Node* node, const float* q, int k, Heap& heap) const;
 
     public:

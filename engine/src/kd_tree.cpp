@@ -77,7 +77,7 @@ void KDTree::print() const { printRec(root, 0); }
 
 float KDTree::distSq(const float* q, int row) const {
     float sum = 0;
-    for (int j = 0; j < dim; j++){
+    for (int j = 0; j < dim; j++){ // multidim distance formula
         float diff = q[j] - data[row * dim + j];
         sum+= diff * diff;
     }
@@ -112,7 +112,7 @@ void KDTree::searchRec(const Node* node, const float* q, int k, Heap& heap) cons
         near = node->right;
     }
 
-    searchRec(near, q, k, heap);
+    searchRec(near, q, k, heap); 
     if ((int)heap.size() < k || gap * gap < heap.top().first) {
         searchRec(far, q, k, heap);
     }
