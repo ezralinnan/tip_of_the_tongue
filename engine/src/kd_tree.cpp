@@ -84,10 +84,11 @@ float KDTree::distSq(const float* q, int row) const {
     return sum;
 }
 
-void KDTree::searchRec(const Node* node, const float* q, int k, Heap& heap) const {
+void KDTree::searchRec(const Node* node, const float* q, int k, Heap& heap, int& checked) const {
     if (node->isLeaf()){
         for (int row: node->rows){
             float dist = distSq(q, row);
+            checked++;
 
             if ((int)heap.size() < k){
                 heap.push({dist, row});
@@ -112,15 +113,19 @@ void KDTree::searchRec(const Node* node, const float* q, int k, Heap& heap) cons
         near = node->right;
     }
 
-    searchRec(near, q, k, heap); 
+    searchRec(near, q, k, heap, checked); 
     if ((int)heap.size() < k || gap * gap < heap.top().first) {
-        searchRec(far, q, k, heap);
+        searchRec(far, q, k, heap, checked);
     }
 }
 
 std::vector<std::pair<int, float>> KDTree::query(const float* q, int k) { // return the vector of returns from queries, and scores! not dist
+    if (k <= 0) return {};
     Heap heap;
-    if (root != nullptr) searchRec(root, q, k, heap); // i mean it cant be empty right, all trees do this
+
+    int checked = 0;
+    if (root != nullptr) searchRec(root, q, k, heap, checked); // i mean it cant be empty right, all trees do this
+    lastCheckedCount = checked;
 
     std::vector<std::pair<int, float>> result; // prepare
     while (!heap.empty()) {

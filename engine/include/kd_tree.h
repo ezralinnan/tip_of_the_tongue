@@ -30,7 +30,8 @@ class KDTree{
         void destroy(Node* node);
         float distSq(const float* q, int row) const;
         using Heap = std::priority_queue<std::pair<float, int>>; // spares me the headache of the massive signature
-        void searchRec(const Node* node, const float* q, int k, Heap& heap) const;
+        int lastCheckedCount = 0;
+        void searchRec(const Node* node, const float* q, int k, Heap& heap, int& checked) const;
 
     public:
         void print() const;
@@ -42,4 +43,5 @@ class KDTree{
 
         void build(const float* data, int n, int dim);
         std::vector<std::pair<int, float>> query(const float* q, int k); // int k is how many results to return, useful for top 5
+        int lastChecked() const { return lastCheckedCount; }
 };

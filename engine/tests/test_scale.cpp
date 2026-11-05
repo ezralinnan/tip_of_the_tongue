@@ -59,9 +59,11 @@ int main() {
     tree.build(data.data(), n, dim);      // pointer strategy from earlier
 
     int matches = 0;
+    long long totalChecked = 0; // big number and whatnot, it is a big project
     for (int i = 0; i < numQueries; i++) {
         const float* q = &queries[i * dim];                  // query i starts here
         auto kd = tree.query(q, k);
+        totalChecked += tree.lastChecked();  // need to know for comparisons v brute force
         auto bf = bruteForce(data.data(), n, dim, q, k);
 
         bool same = (kd.size() == bf.size());
@@ -72,4 +74,5 @@ int main() {
         else std::cout << "not the same on query number" << i << "\n";
     }
     std::cout << matches << " out of " << numQueries << " match\n";
+    std::cout << "average checked: " << totalChecked / numQueries << " of " << n << "\n";
 }
