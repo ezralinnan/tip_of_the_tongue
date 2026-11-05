@@ -4,7 +4,7 @@ import pandas as pd
 from sentence_transformers import SentenceTransformer
 
 
-SAMPLE_SIZE = 100
+SAMPLE_SIZE = None
 
 def build_text(r):
     parts = [r.overview.strip()]
