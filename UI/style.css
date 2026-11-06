@@ -45,3 +45,44 @@ button {
 .movie-card p {
     color: #555;
 }
+
+.comparison-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.algorithm-card {
+    background-color: white;
+    width: 300px;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.algorithm-card h2 {
+    color: #2c3e50;
+}
+
+.algorithm-description {
+    margin-top: 15px;
+    font-style: italic;
+}
+
+.winner-card {
+    background-color: white;
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.navigation-buttons {
+    margin-top: 30px;
+}
+
+.navigation-buttons button {
+    margin: 10px;
+}
