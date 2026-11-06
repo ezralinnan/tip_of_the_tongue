@@ -1,0 +1,9 @@
+method,budget_leaves,share_checked,recall_top6,avg_checked,ms_per_query
+brute_force,all,1.000,1.000000,115049,39.1320
+kdtree_exact,all,1.000,1.000000,115049,68.4559
+kdtree_capped,82,0.010,0.306833,1153,0.659911
+kdtree_capped,164,0.020,0.376333,2305,1.35788
+kdtree_capped,410,0.050,0.498333,5763,3.34524
+kdtree_capped,819,0.100,0.603167,11510,6.76963
+kdtree_capped,2048,0.250,0.771500,28774,17.1642
+kdtree_capped,8192,1.000,1.000000,115049,69.4642
