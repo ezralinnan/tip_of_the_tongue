@@ -1,0 +1,47 @@
+body {
+    background: linear-gradient(to bottom, #d8e8ef, #f5f7fa);
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 50px;
+}
+
+h1 {
+    color: #2c3e50;
+}
+
+input {
+    width: 300px;
+    height: 35px;
+    margin-top: 5px;
+}
+
+button {
+    width: 200px;
+    height: 45px;
+    background-color: #4c84cc;
+    color: white;
+    border: none;
+    border-radius: 10px;
+}
+
+.results-container {
+    max-width: 800px;
+    margin: auto;
+}
+
+.movie-card {
+    background-color: white;
+    padding: 20px;
+    margin: 15px;
+    border-radius: 12px;
+    box-shadow: 0px 3px 8px rgba(0,0,0,0.15);
+}
+
+.movie-card h2 {
+    margin: 0;
+    color: #2c3e50;
+}
+
+.movie-card p {
+    color: #555;
+}
