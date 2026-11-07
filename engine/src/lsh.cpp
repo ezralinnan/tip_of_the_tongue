@@ -89,6 +89,8 @@ std::vector<std::pair<int, float>> LSH::query(const float* q, int k) const {
     std::sort(candidates.begin(), candidates.end());
     candidates.erase(std::unique(candidates.begin(), candidates.end()), candidates.end());
 
+    last_checked_ = (int)candidates.size(); // store how many candidates were checked for benchmarking
+
     std::vector<std::pair<int, float>> scores;
     for (int idx : candidates) {
         float score = dot(q, &data_[idx * dim_]); // compute cosine similarity

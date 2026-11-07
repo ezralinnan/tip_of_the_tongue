@@ -2,6 +2,7 @@
 #include "loader.h"
 #include <iostream>
 #include <chrono>
+#include <algorithm>
 
 
 std::vector<int> bruteForce(const float* data, int n, int dim, const float* q, int k) {

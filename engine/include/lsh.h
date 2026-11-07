@@ -19,7 +19,7 @@
 
 class LSH {
 public:
-    LSH(int bits = 16, int tables = 10, unsigned int seed = 21);
+    LSH(int bits = 10, int tables = 20, unsigned int seed = 21);
 
     //note: bits can't go above 32, because we are using a 32-bit integer to store the hash code for speed
 
@@ -29,6 +29,8 @@ public:
     // query the LSH for the k nearest neighbors of the query vector
     // returns a list of k best vectors, with (row number, score) as a pair
     std::vector<std::pair<int, float>> query(const float* q, int k) const;
+
+    int last_checked() const { return last_checked_; } // for benchmarking, how many movies were checked in the last query
 
 private:
     // settings and seed
@@ -47,6 +49,8 @@ private:
     // hash tables for LSH
     using Table = std::unordered_map<uint32_t, std::vector<int>>;
     std::vector<Table> tables_;
+
+    mutable int last_checked_ = 0; // mutable because we want to update it in a const function
 
     // helper functions inside LSH class
     float dot(const float* a, const float* b) const;
