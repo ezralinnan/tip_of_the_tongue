@@ -15,6 +15,8 @@ Search for a movie by describing it rather than searching for popular keywords o
 
 What are we measuring: accuracy compared to algorithm speed
 
+Testing results for both data structures are available in the benchmarks folder.
+
 
 ## Pipeline
 
