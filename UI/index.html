@@ -1,29 +1,21 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Tip of the Tongue</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-
 <body>
 
-<h1>Tip of the Tongue</h1>
+<h1>🎬 Tip of the Tongue</h1>
 
-<label>Character Names</label><br>
-<input type="text"><br><br>
+<form action="/search" method="POST">
 
-<label>Actors / Actresses</label><br>
-<input type="text"><br><br>
+    <label>Describe the Movie</label><br><br>
 
-<label>Plot Keywords</label><br>
-<input type="text"><br><br>
+    <textarea
+        name="description"
+        rows="8"
+        cols="60">
+    </textarea>
 
-<label>Year Range</label><br>
-<input type="text"><br><br>
+    <br><br>
 
-<a href="results.html">
-    <button>Search Movies</button>
-</a>
+    <button type="submit">Search Movies</button>
+
+</form>
 
 </body>
-</html>
