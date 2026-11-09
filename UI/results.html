@@ -1,53 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Results - Tip of the Tongue</title>
-<link rel="stylesheet" href="style.css">
+    <title>Results - Tip of the Tongue</title>
+    <link rel="stylesheet" href="style.css">
 </head>
- 
+
 <body>
- 
-<h1>🎬 Search Results</h1>
- 
-<div class="results-container">
- 
-<div class="movie-card">
-<h2>Avatar</h2>
-<p>Similarity Score: 96%</p>
-</div>
- 
-<div class="movie-card">
-<h2>Avatar: The Way of Water</h2>
-<p>Similarity Score: 91%</p>
-</div>
- 
-<div class="movie-card">
-<h2>John Carter</h2>
-<p>Similarity Score: 73%</p>
-</div>
- 
-<div class="movie-card">
-<h2>Guardians of the Galaxy</h2>
-<p>Similarity Score: 68%</p>
-</div>
- 
-<div class="movie-card">
-<h2>Dune</h2>
-<p>Similarity Score: 65%</p>
-</div>
- 
-</div>
- 
-<div class="navigation-buttons">
 
-    <a href="index.html">
-        <button>← New Search</button>
-    </a>
+    <h1>🎬 Results</h1>
 
-    <a href="comparison.html">
-        <button>Compare Algorithms →</button>
-    </a>
+    <div class="results-container">
 
-</div>
+        <div class="movie-card">
+            <pre>{{ search_results }}</pre>
+        </div>
+
+    </div>
+
+    <div class="navigation-buttons">
+
+        <a href="/">
+            <button>← New Search</button>
+        </a>
+
+        <a href="/comparison">
+            <button>Compare Algorithms →</button>
+        </a>
+
+    </div>
+
 </body>
 </html>

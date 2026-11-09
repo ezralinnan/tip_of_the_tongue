@@ -15,12 +15,10 @@ int main() {
     int dim = 0;
 
     if (!loadMovies("data/movies.csv", movies)) {
-        std::cout << "Failed to load movies\n";
         return 1;
     }
 
     if (!loadVectors("data/vectors.bin", vectors, n, dim)) {
-        std::cout << "Failed to load vectors\n";
         return 1;
     }
 
@@ -29,7 +27,6 @@ int main() {
     std::ifstream file("data/query_vector.bin", std::ios::binary);
 
     if (!file) {
-        std::cout << "Could not open query_vector.bin\n";
         return 1;
     }
 
@@ -38,64 +35,39 @@ int main() {
         dim * sizeof(float)
     );
 
-    std::cout << "Loaded query vector\n";
-    std::cout << "Loaded " << movies.size() << " movies\n";
+    // ---------- KD TREE ----------
 
-// ---------- KD TREE ----------
+    KDTree tree;
+    tree.build(vectors.data(), n, dim);
 
-KDTree tree;
-tree.build(vectors.data(), n, dim);
+    auto kdResults = tree.query(query.data(), 5);
 
-auto kdResults = tree.query(query.data(), 5);
+    for (auto& result : kdResults) {
 
-std::cout << "\nTop KD-Tree Results:\n\n";
+        int row = result.first;
+        float score = result.second;
 
-for (auto& result : kdResults) {
+        if (row >= 0 && row < (int)movies.size()) {
 
-    int row = result.first;
-    float score = result.second;
-
-    if (row >= 0 && row < (int)movies.size()) {
-
-        std::cout
-            << movies[row].title
-            << " ("
-            << movies[row].year
-            << ")"
-            << "  Score: "
-            << score
-            << "\n";
+            std::cout
+                << movies[row].title
+                << " ("
+                << movies[row].year
+                << ")"
+                << "  Score: "
+                << score
+                << "\n";
+        }
     }
-}
 
+    // ---------- LSH ----------
+    // Runs in the background for comparison page
 
-// ---------- LSH ----------
+    LSH lsh(10, 20);
 
-LSH lsh(10, 20);
+    lsh.build(vectors.data(), n, dim);
 
-lsh.build(vectors.data(), n, dim);
-
-auto lshResults = lsh.query(query.data(), 5);
-
-std::cout << "\nTop LSH Results:\n\n";
-
-for (auto& result : lshResults) {
-
-    int row = result.first;
-    float score = result.second;
-
-    if (row >= 0 && row < (int)movies.size()) {
-
-        std::cout
-            << movies[row].title
-            << " ("
-            << movies[row].year
-            << ")"
-            << "  Score: "
-            << score
-            << "\n";
-    }
-}
+    auto lshResults = lsh.query(query.data(), 5);
 
     return 0;
 }
